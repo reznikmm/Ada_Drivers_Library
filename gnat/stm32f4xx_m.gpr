@@ -1,0 +1,45 @@
+--  SPDX-FileCopyrightText: 2024 Max Reznik <reznikmm@gmail.com>
+--
+--  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+----------------------------------------------------------------
+
+with "stm32f4xx_m_config.gpr";
+with "stm32.gpr";
+project STM32F4XX_M is
+
+   for Target use "arm-eabi";
+   for Runtime ("Ada") use "embedded-stm32f4";
+
+   for Library_Name use "stm32f4xx_m";
+   for Library_Version use Project'Library_Name & ".so." & Stm32f4xx_M_Config.Crate_Version;
+
+   Src_Dirs_Root := "..";
+   for Source_Dirs use (
+    Src_Dirs_Root & "/boards/stm32f4xx_m/src/", -- From board definition
+    Src_Dirs_Root & "/boards/stm32_common/common/", -- From board definition
+    Src_Dirs_Root & "/boards/stm32_common/sdcard/", -- From board definition
+    Src_Dirs_Root & "/middleware/src/ravenscar-common" -- From middleware config
+   );
+
+   for Object_Dir use "../.obj/" & Stm32f4xx_M_Config.Build_Profile;
+   for Create_Missing_Dirs use "True";
+   for Library_Dir use "../.lib";
+
+   type Library_Type_Type is ("relocatable", "static", "static-pic");
+   Library_Type : Library_Type_Type :=
+     external ("STM32F4XX_M_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
+   for Library_Kind use Library_Type;
+
+   package Compiler is
+      for Default_Switches ("Ada") use Stm32f4xx_M_Config.Ada_Compiler_Switches;
+   end Compiler;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+   end Binder;
+
+   package Install is
+      for Artifacts (".") use ("share");
+   end Install;
+
+end STM32F4XX_M;

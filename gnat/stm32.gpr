@@ -1,0 +1,35 @@
+--  SPDX-FileCopyrightText: 2024 Max Reznik <reznikmm@gmail.com>
+--
+--  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+----------------------------------------------------------------
+
+with "stm32f4xx_m_config.gpr";
+project STM32 is
+
+   for Target use "arm-eabi";
+   for Runtime ("Ada") use "embedded-stm32f4";
+
+   Src_Dirs_Root := "..";
+   for Source_Dirs use (
+    Src_Dirs_Root & "/arch/ARM/STM32/devices/stm32f40x/", -- From MCU definition
+    Src_Dirs_Root & "/arch/ARM/STM32/svd/stm32f40x", -- From MCU definition
+    Src_Dirs_Root & "/arch/ARM/STM32/drivers/", -- From MCU definition
+    Src_Dirs_Root & "/arch/ARM/STM32/drivers/dma/", -- From MCU definition
+    Src_Dirs_Root & "/arch/ARM/STM32/drivers/dma_interrupts/", -- From MCU definition
+    Src_Dirs_Root & "/arch/ARM/STM32/drivers/crc_stm32f4/", -- From MCU definition
+    Src_Dirs_Root & "/arch/ARM/STM32/drivers/fsmc/", -- From MCU definition
+    Src_Dirs_Root & "/arch/ARM/STM32/drivers/i2c_stm32f4", -- From MCU definition
+    Src_Dirs_Root & "/arch/ARM/STM32/drivers/power_control_stm32f4", -- From MCU definition
+    Src_Dirs_Root & "/arch/ARM/STM32/drivers/uart_stm32f4/", -- From MCU definition
+    Src_Dirs_Root & "/arch/ARM/STM32/drivers/sd/", -- From MCU definition
+    Src_Dirs_Root & "/arch/ARM/STM32/drivers/sd/sdio/" -- From MCU definition
+   );
+
+   for Object_Dir use "../.obj/" & Stm32f4xx_M_Config.Build_Profile;
+   for Create_Missing_Dirs use "True";
+
+   package Compiler is
+      for Default_Switches ("Ada") use Stm32f4xx_M_Config.Ada_Compiler_Switches;
+   end Compiler;
+
+end STM32;
