@@ -30,13 +30,13 @@
 ------------------------------------------------------------------------------
 
 with System; use System;
-with ADL_Config;
+--  with ADL_Config;
 
 with STM32_SVD.RCC; use STM32_SVD.RCC;
 
 package body STM32.Device is
 
-   HSE_VALUE : constant := ADL_Config.High_Speed_External_Clock;
+   HSE_VALUE : constant := 8_000_000;
    --  External oscillator in Hz
 
    HSI_VALUE : constant := 16_000_000;
