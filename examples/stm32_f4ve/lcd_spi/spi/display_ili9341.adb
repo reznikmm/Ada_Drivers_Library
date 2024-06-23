@@ -67,6 +67,8 @@ package body Display_ILI9341 is
           Output_Type => STM32.GPIO.Push_Pull,
           Speed       => STM32.GPIO.Speed_100MHz));
 
+      SPI_CS.Set;
+
       STM32.GPIO.Configure_IO
         (SPI_Pins,
          (Mode           => STM32.GPIO.Mode_AF,
@@ -96,12 +98,14 @@ package body Display_ILI9341 is
    ----------------
 
    procedure Initialize (This : in out Display) is
-      TFT_BLK : STM32.GPIO.GPIO_Point := STM32.Device.PA3;
-        --  STM32.Board.TFT_BLK
       TFT_Reset : STM32.GPIO.GPIO_Point := STM32.Device.PA1;
-        --  STM32.Board.TFT_BLK
+      --  Reset pin
+      TFT_WRX : STM32.GPIO.GPIO_Point := STM32.Device.PA2;
+      --  D/C pin
+      TFT_BLK : STM32.GPIO.GPIO_Point := STM32.Device.PA3;
+      --  STM32.Board.TFT_BLK
       TFT_Pins : constant STM32.GPIO.GPIO_Points :=
-        (TFT_BLK, TFT_Reset);
+        (TFT_Reset, TFT_WRX, TFT_BLK);
    begin
       STM32.Device.Enable_Clock (TFT_Pins);
 
@@ -118,6 +122,7 @@ package body Display_ILI9341 is
       Ravenscar_Time.Delays.Delay_Milliseconds (121);
 
       TFT_BLK.Set;  --  Turn LCD backlight on
+      TFT_WRX.Clear;
 
       Initialize_SPI;
 
