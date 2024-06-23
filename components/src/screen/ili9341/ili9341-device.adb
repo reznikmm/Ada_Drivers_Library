@@ -117,7 +117,13 @@ package body ILI9341.Device is
       Time.Delay_Milliseconds (150);
 
       Send_Command (Data, ILI9341_DISPLAY_ON, []);
-      Send_Command (Data, ILI9341_GRAM, []);
+
+      case Connection is
+         when RGB =>
+            Send_Command (Data, ILI9341_GRAM, []);
+         when Serial | Parallel =>
+            null;
+      end case;
    end Initialize;
 
    ---------------------
