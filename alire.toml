@@ -23,10 +23,7 @@ cortex_m.core = "m4f"
 
 [[depends-on]]
 hal = "~0.4.0"
-gnat_arm_elf = "^13.2"
-cortex_m = "~0.5.0"
-adl_middleware = "~0.2.0"
-embedded_components = "~0.2.0"
-
-[[pins]]
-embedded_components = { url='https://github.com/reznikmm/embedded-components.git', branch='20240224' }
+gnat_arm_elf = "*"
+cortex_m = "~0.6.0-dev"
+adl_middleware = "~0.3.0-dev"
+embedded_components = "~0.3.0-dev"
