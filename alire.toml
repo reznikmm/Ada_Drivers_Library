@@ -22,8 +22,8 @@ development.contracts = "Yes"
 cortex_m.core = "m4f"
 
 [[depends-on]]
-hal = "~0.4.0"
+hal = "0.3.1"
 gnat_arm_elf = "*"
-cortex_m = "~0.6.0-dev"
-adl_middleware = "~0.3.0-dev"
-embedded_components = "~0.3.0-dev"
+cortex_m = "1.1.0"
+adl_middleware = "0.2.0"
+embedded_components = "0.3.0"
