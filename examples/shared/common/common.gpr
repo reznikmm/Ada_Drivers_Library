@@ -1,3 +1,4 @@
+with "adl_middleware.gpr";
 project Common is
 
    type LOADER_Type is
