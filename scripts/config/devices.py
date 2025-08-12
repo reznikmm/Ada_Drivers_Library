@@ -24,6 +24,7 @@ def list_of_devices(config):
     family = config.get_config("Device_Family")
     if family == "STM32F4":
         return ['STM32F407VGTx',
+                'STM32F407ZGTx',
                 'STM32F405RGTx',
                 'STM32F427VGTx',
                 'STM32F429ZITx',
@@ -76,7 +77,7 @@ def load_device_config(config, source_dir):
     dev = None
     src = []
 
-    if mcu == 'STM32F407VGTx' or mcu == 'STM32F405RGTx':
+    if mcu.startswith('STM32F407') or mcu == 'STM32F405RGTx':
         src += ['arch/ARM/STM32/devices/stm32f40x/',
                 'arch/ARM/STM32/svd/stm32f40x',
                 'arch/ARM/STM32/drivers/',

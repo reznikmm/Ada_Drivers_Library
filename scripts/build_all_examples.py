@@ -83,6 +83,13 @@ projects = [
             "/examples/stm32f4xx_m/sdcard_fs/sdcard_fs.gpr",
             "/examples/stm32f4xx_m/sdcard_raw_io/sdcard_raw_io.gpr",
 
+            # STM32F4XX Pro
+            "/boards/stm32f4xx_pro/stm32f4xx_pro_full.gpr",
+            "/boards/stm32f4xx_pro/stm32f4xx_pro_sfp.gpr",
+            "/examples/stm32f4xx_pro/blinky/blinky.gpr",
+            "/examples/stm32f4xx_pro/flash/flash.gpr",
+            "/examples/stm32f4xx_pro/lcd/lcd.gpr",
+
             # Feather STM32F405
             "/examples/feather_stm32f405/blinky/blinky.gpr",
             "/examples/feather_stm32f405/charlie_wing/charlie_wing.gpr",

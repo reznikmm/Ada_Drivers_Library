@@ -7,6 +7,7 @@ def list_of_boards():
             'STM32F429_Discovery',
             'STM32F469_Discovery',
             'STM32F4XX_M',
+            'STM32F4XX_Pro',
             'STM32_F4VE',
             'STM32F746_Discovery',
             'STM32F769_Discovery',
@@ -92,6 +93,20 @@ def load_board_config(config):
         config.pre_define('Has_Ravenscar_Full_Runtime', 'True', origin)
         config.pre_define('Runtime_Name_Suffix', 'stm32f4', origin)
         config.add_source_dir('boards/stm32f4xx_m/src/', origin)
+        config.add_source_dir('boards/stm32_common/common/', origin)
+        config.add_source_dir('boards/stm32_common/sdcard/', origin)
+
+    elif board == "STM32F4XX_Pro":
+        config.pre_define('Architecture', 'ARM', origin)
+        config.pre_define('Vendor', 'STMicro', origin)
+        config.pre_define('Device_Family', 'STM32F4', origin)
+        config.pre_define('Device_Name', 'STM32F407ZGTx', origin)
+        config.pre_define('High_Speed_External_Clock', '8000000', origin)
+        config.pre_define('Has_ZFP_Runtime', 'False', origin)
+        config.pre_define('Has_Ravenscar_SFP_Runtime', 'True', origin)
+        config.pre_define('Has_Ravenscar_Full_Runtime', 'True', origin)
+        config.pre_define('Runtime_Name_Suffix', 'stm32f4', origin)
+        config.add_source_dir('boards/stm32f4xx_pro/src/', origin)
         config.add_source_dir('boards/stm32_common/common/', origin)
         config.add_source_dir('boards/stm32_common/sdcard/', origin)
 

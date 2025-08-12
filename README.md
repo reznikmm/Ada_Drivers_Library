@@ -23,6 +23,7 @@ and RISC-V architectures. Some devices are only partially supported. Go to the
 | ARM    | [STM32F429_Discovery] |
 | ARM    | [STM32F469_Discovery] |
 | ARM    | [STM32F4XX_M]         |
+| ARM    | [STM32F4XX_Pro]       |
 | ARM    | [STM32_F4VE]          |
 | ARM    | [STM32F746_Discovery] |
 | ARM    | [STM32F769_Discovery] |
@@ -49,6 +50,7 @@ and RISC-V architectures. Some devices are only partially supported. Go to the
 [STM32F407_Discovery]: examples/STM32F4_DISCO/README.md
 [STM32_F4VE]:          examples/stm32_f4ve/README.md
 [STM32F4XX_M]:         examples/stm32f4xx_m/README.md
+[STM32F4XX_Pro]:       examples/stm32f4xx_pro/README.md
 [STM32F746_Discovery]: examples/STM32F746_Discovery/README.md
 [STM32F769_Discovery]: examples/STM32F769_Discovery/README.md
 
