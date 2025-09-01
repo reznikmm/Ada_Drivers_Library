@@ -93,4 +93,13 @@ package body Display_ILI9341 is
             when others => ILI9341_Device.Portrait_2);
    end Set_Orientation;
 
+   -------------
+   -- To_Zero --
+   -------------
+
+   procedure To_Zero (This : in out Display) is
+   begin
+      This.Device.To_Zero;
+   end To_Zero;
+
 end Display_ILI9341;

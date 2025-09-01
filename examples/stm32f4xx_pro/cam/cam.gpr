@@ -1,0 +1,15 @@
+with "../../../boards/stm32f4xx_pro/stm32f4xx_pro_full.gpr";
+
+project Cam extends "../../shared/common/common.gpr" is
+
+   for Runtime ("Ada") use STM32F4XX_Pro_Full'Runtime ("Ada");
+   for Target use "arm-eabi";
+   for Main use ("cam.adb");
+   for Languages use ("Ada");
+   for Source_Dirs use (".");
+   for Object_Dir use "obj/";
+   for Create_Missing_Dirs use "True";
+
+   package Compiler renames STM32F4XX_Pro_Full.Compiler;
+
+end Cam;

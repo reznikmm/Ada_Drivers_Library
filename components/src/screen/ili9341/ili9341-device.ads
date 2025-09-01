@@ -88,6 +88,7 @@ package ILI9341.Device is
    procedure Enable_Display (This : in out ILI9341_Device);
 
    procedure Disable_Display (This : in out ILI9341_Device);
+   procedure To_Zero (This : in out ILI9341_Device);
 
 private
 

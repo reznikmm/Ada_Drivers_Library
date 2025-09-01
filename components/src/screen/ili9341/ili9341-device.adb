@@ -149,4 +149,13 @@ package body ILI9341.Device is
       This.Orientation := To;
    end Set_Orientation;
 
+   -------------
+   -- To_Zero --
+   -------------
+
+   procedure To_Zero (This : in out ILI9341_Device) is
+   begin
+      Send_Command (Connector, ILI9341_GRAM, []);
+   end To_Zero;
+
 end ILI9341.Device;

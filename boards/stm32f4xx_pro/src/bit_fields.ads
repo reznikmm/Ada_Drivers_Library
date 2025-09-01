@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                 Copyright (C) 2015-2025, AdaCore                         --
+--                     Copyright (C) 2015-2016, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -11,7 +11,7 @@
 --        notice, this list of conditions and the following disclaimer in   --
 --        the documentation and/or other materials provided with the        --
 --        distribution.                                                     --
---     3. Neither the name of STMicroelectronics nor the names of its       --
+--     3. Neither the name of the copyright holder nor the names of its     --
 --        contributors may be used to endorse or promote products derived   --
 --        from this software without specific prior written permission.     --
 --                                                                          --
@@ -29,53 +29,26 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with System.Storage_Elements;
+with HAL; use HAL;
 
-with HAL.Framebuffer;
-with ILI9341.Device.Bitmap;
-with ILI9341.Device;
-with ILI9341.B16_Connector;
-with STM32.FSMC;
+package Bit_Fields is
+   type Bit_Field is array (Natural range <>) of Bit
+     with Component_Size => 1;
 
-package Display_ILI9341 is
+   function To_Word (Bits : Bit_Field) return UInt32;
+   function To_UInt16 (Bits : Bit_Field) return UInt16;
+   function To_UInt8 (Bits : Bit_Field) return UInt8;
 
-   type Display is tagged limited private;
-
-   procedure Initialize (This : in out Display);
-   --  Configure FSMC, turn backlight on and initialize the display
-
-   procedure To_Zero (This : in out Display);
-
-   procedure Set_Orientation
-     (This        : in out Display;
-      Orientation : HAL.Framebuffer.Display_Orientation);
-
-   use System.Storage_Elements;
-
-   package ILI9341_Device is new ILI9341.Device
-     (ILI9341_Connector => ILI9341.B16_Connector.ILI9341_Connector,
-      Send_Command      => ILI9341.B16_Connector.Send_Command,
-      Connection        => ILI9341.Parallel,
-      Connector         =>
-        (Command => STM32.FSMC.Bank_1_Start (Subbank => 4),
-         RAM     => STM32.FSMC.Bank_1_Start (Subbank => 4) + 2 ** 7));
-   --  RAM region starts when A6 = 1, TFT attached with 16 bits bus, so 2**7
-
-   package ILI9341_Bitmap is new ILI9341_Device.Bitmap
-     (ILI9341.B16_Connector.Write_Pixels,
-      ILI9341.B16_Connector.Read_Pixels);
-
-   subtype Bitmap_Buffer is ILI9341_Bitmap.Bitmap_Buffer;
-
-   function Buffer (This : in out Display) return Bitmap_Buffer;
-
-private
-
-   type Display is tagged limited record
-      Device : aliased ILI9341_Device.ILI9341_Device;
-   end record;
-
-   function Buffer (This : in out Display) return Bitmap_Buffer is
-     (ILI9341_Bitmap.Get_Bitmap (This.Device'Access));
-
-end Display_ILI9341;
+   function To_Bit_Field (Value : UInt32) return Bit_Field
+     with Post => To_Bit_Field'Result'First = 0
+     and then
+       To_Bit_Field'Result'Last = 31;
+   function To_Bit_Field (Value : UInt16) return Bit_Field
+     with Post => To_Bit_Field'Result'First = 0
+     and then
+       To_Bit_Field'Result'Last = 15;
+   function To_Bit_Field (Value : UInt8) return Bit_Field
+     with Post => To_Bit_Field'Result'First = 0
+     and then
+       To_Bit_Field'Result'Last = 7;
+end Bit_Fields;

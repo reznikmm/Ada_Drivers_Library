@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---                 Copyright (C) 2015-2025, AdaCore                         --
+--                     Copyright (C) 2015-2016, AdaCore                     --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -11,7 +11,7 @@
 --        notice, this list of conditions and the following disclaimer in   --
 --        the documentation and/or other materials provided with the        --
 --        distribution.                                                     --
---     3. Neither the name of STMicroelectronics nor the names of its       --
+--     3. Neither the name of the copyright holder nor the names of its     --
 --        contributors may be used to endorse or promote products derived   --
 --        from this software without specific prior written permission.     --
 --                                                                          --
@@ -29,53 +29,49 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with System.Storage_Elements;
+with HAL;     use HAL;
+with HAL.I2C; use HAL.I2C;
 
-with HAL.Framebuffer;
-with ILI9341.Device.Bitmap;
-with ILI9341.Device;
-with ILI9341.B16_Connector;
-with STM32.FSMC;
+package OV7670 is
 
-package Display_ILI9341 is
+   OV7670_PID : constant := 16#76#;
 
-   type Display is tagged limited private;
+   type Pixel_Format is (Pix_RGB565, Pix_YUV422, Pix_JPEG);
 
-   procedure Initialize (This : in out Display);
-   --  Configure FSMC, turn backlight on and initialize the display
+   type Frame_Size is (QQCIF, QQVGA, QQVGA2, QCIF, HQVGA, QVGA, CIF, VGA,
+                       SVGA, SXGA, UXGA);
 
-   procedure To_Zero (This : in out Display);
+   type Frame_Rate is (FR_2FPS, FR_8FPS, FR_15FPS, FR_30FPS, FR_60FPS);
 
-   procedure Set_Orientation
-     (This        : in out Display;
-      Orientation : HAL.Framebuffer.Display_Orientation);
+   type Resolution is record
+     Width, Height : UInt16;
+   end record;
 
-   use System.Storage_Elements;
+   Resolutions : constant array (Frame_Size) of Resolution :=
+     ((88,    72),   --  /* QQCIF */
+      (160,   120),  --  /* QQVGA */
+      (128,   160),  --  /* QQVGA2*/
+      (176,   144),  --  /* QCIF  */
+      (240,   160),  --  /* HQVGA */
+      (320,   240),  --  /* QVGA  */
+      (352,   288),  --  /* CIF   */
+      (640,   480),  --  /* VGA   */
+      (800,   600),  --  /* SVGA  */
+      (1280,  1024), --  /* SXGA  */
+      (1600,  1200)  --  /* UXGA  */
+     );
 
-   package ILI9341_Device is new ILI9341.Device
-     (ILI9341_Connector => ILI9341.B16_Connector.ILI9341_Connector,
-      Send_Command      => ILI9341.B16_Connector.Send_Command,
-      Connection        => ILI9341.Parallel,
-      Connector         =>
-        (Command => STM32.FSMC.Bank_1_Start (Subbank => 4),
-         RAM     => STM32.FSMC.Bank_1_Start (Subbank => 4) + 2 ** 7));
-   --  RAM region starts when A6 = 1, TFT attached with 16 bits bus, so 2**7
+   type OV7670_Camera (I2C : not null Any_I2C_Port) is private;
 
-   package ILI9341_Bitmap is new ILI9341_Device.Bitmap
-     (ILI9341.B16_Connector.Write_Pixels,
-      ILI9341.B16_Connector.Read_Pixels);
+   procedure Initialize (This : in out OV7670_Camera;
+                         Addr : I2C_Address);
 
-   subtype Bitmap_Buffer is ILI9341_Bitmap.Bitmap_Buffer;
-
-   function Buffer (This : in out Display) return Bitmap_Buffer;
+   function Get_PID (This : OV7670_Camera) return UInt8;
 
 private
 
-   type Display is tagged limited record
-      Device : aliased ILI9341_Device.ILI9341_Device;
+   type OV7670_Camera (I2C  : not null Any_I2C_Port) is record
+      Addr : UInt10;
    end record;
 
-   function Buffer (This : in out Display) return Bitmap_Buffer is
-     (ILI9341_Bitmap.Get_Bitmap (This.Device'Access));
-
-end Display_ILI9341;
+end OV7670;

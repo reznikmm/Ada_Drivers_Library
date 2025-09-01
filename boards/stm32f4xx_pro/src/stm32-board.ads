@@ -39,8 +39,10 @@ with System;
 with STM32.Device;            use STM32.Device;
 with STM32.DMA;               use STM32.DMA;
 with STM32.DMA.Interrupts;    use STM32.DMA.Interrupts;
+with STM32.I2C;               use STM32.I2C;
 with STM32.GPIO;              use STM32.GPIO;
 with STM32.USARTs;
+with STM32.Timers;
 
 with SDCard;
 with W25Q16;
@@ -182,5 +184,55 @@ package STM32.Board is
       Stop   : STM32.USARTs.Stop_Bits := STM32.USARTs.Stopbits_1;
       Parity : STM32.USARTs.Parities := STM32.USARTs.No_Parity;
       Flow   : STM32.USARTs.Flow_Control := STM32.USARTs.No_Flow_Control);
+
+   -------------
+   --  Camera --
+   -------------
+
+   -----------------
+   --  Sensor DMA --
+   -----------------
+
+   DMA2_Stream1 : aliased DMA_Interrupt_Controller
+     (DMA_2'Access, Stream_1,
+      Ada.Interrupts.Names.DMA2_Stream1_Interrupt,
+      System.Interrupt_Priority'Last);
+
+   Sensor_DMA        : STM32.DMA.DMA_Controller renames DMA_2;
+   Sensor_DMA_Chan   : STM32.DMA.DMA_Channel_Selector renames
+     STM32.DMA.Channel_1;
+   Sensor_DMA_Stream : STM32.DMA.DMA_Stream_Selector renames
+     STM32.DMA.Stream_1;
+   Sensor_DMA_Int    : STM32.DMA.Interrupts.DMA_Interrupt_Controller renames
+     DMA2_Stream1;
+
+   Sensor_I2C     : I2C_Port renames I2C_3;
+   Sensor_I2C_SCL : GPIO_Point renames PA8;
+   Sensor_I2C_SDA : GPIO_Point renames PC9;
+   Sensor_I2C_AF  : GPIO_Alternate_Function renames GPIO_AF_I2C3_4;
+
+   SENSOR_CLK_IO   : GPIO_Point renames PF8;
+   SENSOR_CLK_AF   : GPIO_Alternate_Function renames GPIO_AF_TIM13_9;
+   SENSOR_CLK_TIM  : STM32.Timers.Timer renames Timer_13;
+   SENSOR_CLK_CHAN : constant STM32.Timers.Timer_Channel := STM32.Timers.Channel_1;
+   SENSOR_CLK_FREQ : constant := 12_000_000;
+
+   ---------------
+   -- DCMI Pins --
+   ---------------
+
+   DCMI_HSYNC : GPIO_Point renames PA4;
+   DCMI_PCLK  : GPIO_Point renames PA6;
+   DCMI_RST   : GPIO_Point renames PG15;
+   DCMI_PWDN  : GPIO_Point renames PG9;
+   DCMI_VSYNC : GPIO_Point renames PB7;
+   DCMI_D0    : GPIO_Point renames PC6;
+   DCMI_D1    : GPIO_Point renames PC7;
+   DCMI_D2    : GPIO_Point renames PC8;
+   DCMI_D3    : GPIO_Point renames PE1;  --  Alternative!!!
+   DCMI_D4    : GPIO_Point renames PC11;
+   DCMI_D5    : GPIO_Point renames PB6;
+   DCMI_D6    : GPIO_Point renames PE5;
+   DCMI_D7    : GPIO_Point renames PE6;
 
 end STM32.Board;
